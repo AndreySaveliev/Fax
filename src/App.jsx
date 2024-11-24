@@ -1,28 +1,33 @@
 import { useState } from "react";
+import Header from "./components/Header";
+import Input from "./components/Input";
+import MessageContainer from "./components/MessageContainer";
+import SideBar from "./components/SideBar";
+import { Outlet, Route, Router, Routes } from "react-router";
 function App() {
   // const apiKey = process.env.MISTRAL_API_KEY || 'your_api_key';
-  const [promt, setPropmt] = useState("");
-  const [res, setRes] = useState([]);
-  const client = new Mistral({ apiKey: "PrY8ry7da9ajHmgBHHg3awLXpAobm4n6" });
+  const [showSide, setShowSide] = useState(false);
 
-  const handelClick = async () => {
-    const resp = await client.agents.complete({
-      agentId: "ag:e11a11ab:20241121:untitled-agent:b0b02cac",
-      messages: [{ role: "user", content: promt }],
-    });
-    console.log(resp);
-    setRes([resp.choices[0].message.content]);
+  const handleShowSideBar = () => {
+    setShowSide(!showSide);
   };
 
   return (
-    <div>
-      {res &&
-        res.map((response) => {
-          const newText = response.split("\n");
-          return newText.map((line, index) => <p key={index}>{line}</p>);
-        })}
-      <input value={promt} onChange={(e) => setPropmt(e.target.value)} />
-      <button onClick={handelClick}>say</button>
+    <div className="flex h-screen w-screen flex-col bg-background">
+      <Header handleShowSideBar={handleShowSideBar} />
+      <SideBar showSide={showSide} handleShowSideBar={handleShowSideBar} />
+      <Routes>
+        <Route
+          path="/:uuid"
+          element={
+            <>
+              <MessageContainer />
+              <Input />
+            </>
+          }
+        />
+      </Routes>
+      {/* <Input /> */}
     </div>
   );
 }
