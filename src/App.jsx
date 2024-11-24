@@ -1,5 +1,3 @@
-import "./App.css";
-import { Mistral } from "@mistralai/mistralai";
 import { useState } from "react";
 function App() {
   // const apiKey = process.env.MISTRAL_API_KEY || 'your_api_key';
