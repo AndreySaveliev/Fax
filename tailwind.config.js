@@ -11,6 +11,11 @@ export default {
         accent: "#FFFBF2", // yes
       },
     },
+    animation: {
+      "bounce-1": "bounce 1s linear infinite",
+      "bounce-2": "bounce 1s 0.1s linear infinite",
+      "bounce-3": "bounce 1s 0.2s linear infinite"
+    }
   },
   plugins: [],
 };
