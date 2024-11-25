@@ -15,6 +15,17 @@ export const sendMessage = createAsyncThunk(
   },
 );
 
+export const reAskLastQuestion = createAsyncThunk(
+  "message/reAskLastQuestion",
+  async (payload) => {
+    const response = await client.agents.complete({
+      agentId: agentId,
+      messages: [{ role: "user", content: payload.message }],
+    });
+    return { response, id: payload.id };
+  },
+);
+
 const initialState = {
   chats: {
     "c4debc96-e7e5-42a5-b245-cdb2d9220286": {
@@ -28,10 +39,10 @@ const initialState = {
           from: "bot",
         },
       ],
-      lastMessage: "",
+      lastMessage: "weather 2 weeks ago?",
       lastMessageTimeStamp: "1732359360316",
       isPending: null,
-      ableToReask: false,
+      ableToReask: true,
     },
     "ab7d1e85-d474-4077-9665-4ef83e716829": {
       messages: [
@@ -60,16 +71,24 @@ const messagesSlice = createSlice({
       state.messageCount += 1;
     },
     saveUserMessage: (state, action) => {
-      state = state.chats[action.payload.id].messages.push({
+      let newState = state;
+      newState.chats[action.payload.id].messages.push({
         text: action.payload.promt,
         from: "user",
       });
+      state = newState;
+      // работает !!
+      // state = state.chats[action.payload.id].messages.push({
+      //   text: action.payload.promt,
+      //   from: "user",
+      // });
     },
   },
   extraReducers: (builder) => {
     builder.addCase(sendMessage.pending, (state, action) => {
       let newState = state;
       newState.chats[action.meta.arg.id].isPending = true;
+      newState.chats[action.meta.arg.id].ableToReask = false;
       state = newState;
     });
     builder.addCase(sendMessage.fulfilled, (state, action) => {
@@ -78,9 +97,29 @@ const messagesSlice = createSlice({
         text: action.payload.response.choices[0].message.content,
         from: "bot",
       });
+      newState.chats[action.meta.arg.id].lastMessage = action.meta.arg.message;
       newState.chats[action.meta.arg.id].isPending = false;
       newState.chats[action.meta.arg.id].lastMessageTimeStamp = Date.now();
       newState.chats[action.meta.arg.id].ableToReask = true;
+      state = newState;
+    });
+    builder.addCase(reAskLastQuestion.pending, (state, action) => {
+      console.log(action, "pending");
+      let newState = state;
+      newState.chats[action.meta.arg.id].isPending = true;
+      newState.chats[action.meta.arg.id].ableToReask = false;
+      state = newState;
+    });
+    builder.addCase(reAskLastQuestion.fulfilled, (state, action) => {
+      console.log(action, "full");
+      let newState = state;
+      newState.chats[action.meta.arg.id].messages.push({
+        text: action.payload.response.choices[0].message.content,
+        from: "bot",
+      });
+      newState.chats[action.meta.arg.id].isPending = false;
+      newState.chats[action.meta.arg.id].lastMessageTimeStamp = Date.now();
+      newState.chats[action.meta.arg.id].ableToReask = false;
       state = newState;
     });
   },
@@ -88,3 +127,41 @@ const messagesSlice = createSlice({
 export const { increment, saveUserMessage } = messagesSlice.actions;
 
 export default messagesSlice.reducer;
+
+// {
+//   "type": "message/reAskLastQuestion/fulfilled",
+//   "payload": {
+//       "response": {
+//           "id": "630fd72eb0b0405d8e62da949e302d9c",
+//           "object": "chat.completion",
+//           "model": "mistral-large-2411",
+//           "usage": {
+//               "promptTokens": 28,
+//               "completionTokens": 358,
+//               "totalTokens": 386
+//           },
+//           "created": 1732538023,
+//           "choices": [
+//               {
+//                   "index": 0,
+//                   "message": {
+//                       "content": "To find out the weather from two weeks ago, you'll need to use historical weather data resources. Here are some reliable sources where you can find this information:\n\n1. **Weather Underground**: This website offers historical weather data for locations worldwide. You can enter the specific date and location to get detailed weather information.\n   - Website: [Weather Underground](https://www.wunderground.com/)\n\n2. **AccuWeather**: AccuWeather provides historical weather data, including temperature, precipitation, and other metrics.\n   - Website: [AccuWeather](https://www.accuweather.com/)\n\n3. **The Weather Channel**: This popular weather service also offers historical weather data. You can search by date and location.\n   - Website: [The Weather Channel](https://weather.com/)\n\n4. **National Weather Service (NWS)**: For the United States, the NWS provides historical weather data through their Climate Data Online (CDO) service.\n   - Website: [National Weather Service](https://www.weather.gov/)\n\n5. **MeteoBlue**: This Swiss-based weather service provides historical weather data for locations around the world.\n   - Website: [MeteoBlue](https://www.meteoblue.com/)\n\n6. **World Weather Online**: This service offers historical weather data for various locations globally.\n   - Website: [World Weather Online](https://www.worldweatheronline.com/)\n\nTo fact-check the information, you can cross-reference data from multiple sources to ensure accuracy.",
+//                       "toolCalls": null,
+//                       "prefix": false,
+//                       "role": "assistant"
+//                   },
+//                   "finishReason": "stop"
+//               }
+//           ]
+//       },
+//       "id": "c4debc96-e7e5-42a5-b245-cdb2d9220286"
+//   },
+//   "meta": {
+//       "arg": {
+//           "message": "weather 2 weeks ago?",
+//           "id": "c4debc96-e7e5-42a5-b245-cdb2d9220286"
+//       },
+//       "requestId": "QjTrUyGjfo1KpwBU_qU-3",
+//       "requestStatus": "fulfilled"
+//   }
+// }

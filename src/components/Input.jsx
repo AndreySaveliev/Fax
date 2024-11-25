@@ -2,18 +2,29 @@ import React, { useCallback, useEffect, useState } from "react";
 import sendIcon from "./../assets/message-send.svg";
 import reload from "./../assets/reload.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { saveUserMessage, sendMessage } from "../redux/messagesSlice";
+import {
+  reAskLastQuestion,
+  saveUserMessage,
+  sendMessage,
+} from "../redux/messagesSlice";
 import { useParams } from "react-router";
 function Input() {
   const [promt, setPropmt] = useState("");
-  let params = useParams()
-  const {isPending, ableToReask} = useSelector((state) => state.messages.chats[params.uuid]);
+  let params = useParams();
+  const { isPending, ableToReask, lastMessage } = useSelector(
+    (state) => state.messages.chats[params.uuid],
+  );
   const [isDis, setDis] = useState(false);
   const dispatch = useDispatch();
   const handleClickSend = () => {
-    dispatch(saveUserMessage({promt, id: params.uuid}))
-    dispatch(sendMessage({message: promt, id: params.uuid}));
+    dispatch(saveUserMessage({ promt, id: params.uuid }));
+    dispatch(sendMessage({ message: promt, id: params.uuid }));
     setPropmt("");
+  };
+
+  const handleReaskLastQuestion = () => {
+    dispatch(saveUserMessage({ promt: lastMessage, id: params.uuid }));
+    dispatch(reAskLastQuestion({ message: lastMessage, id: params.uuid }));
   };
 
   useEffect(() => {
@@ -25,10 +36,10 @@ function Input() {
   }, [promt]);
 
   return (
-    <div className="mx-auto flex flex-row gap-3 px-5 lg:w-[60%] w-full">
+    <div className="mx-auto flex w-full flex-row gap-3 px-5 lg:w-[60%]">
       <div className="relative mb-8 flex flex-1 flex-row bg-white">
         <textarea
-          className="h-12 flex-1 rounded-xl px-5 text-[17px] focus:outline-none pr-14 py-3"
+          className="h-12 flex-1 rounded-xl px-5 py-3 pr-14 text-[17px] focus:outline-none"
           value={promt}
           placeholder="Ask me anything..."
           onChange={(e) => setPropmt(e.target.value)}
@@ -39,13 +50,16 @@ function Input() {
           disabled={isDis}
         >
           <img
-            className={`${isPending ? "animate-bounce" : ""}`}
+            className={`${isPending ? "disabled:opacity-25" : ""}`}
             src={sendIcon}
           />
         </button>
       </div>
       {ableToReask && (
-        <button className="h-14 w-14 justify-items-center rounded-xl bg-black hover:scale-95">
+        <button
+          onClick={handleReaskLastQuestion}
+          className="h-14 w-14 justify-items-center rounded-xl bg-black hover:scale-95"
+        >
           <img src={reload} />
         </button>
       )}
