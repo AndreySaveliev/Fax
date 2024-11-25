@@ -1,8 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useFormatDate } from "../hooks/useFormatDate";
-import { replace, useNavigate } from "react-router";
-
+import { useNavigate } from "react-router";
 function SideBar({ showSide, handleShowSideBar }) {
   const { chats } = useSelector((state) => state.chats);
   const navigate = useNavigate();
