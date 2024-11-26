@@ -6,7 +6,7 @@ import lang from "./../assets/globe.png";
 import arrow from "./../assets/arrow-ios-right.png";
 function UserProfile() {
   return (
-    <div className="flex flex-col items-center">
+    <div className="mx-auto flex flex-col items-center lg:max-w-[20%]">
       <div className="mb-4 flex flex-col">
         <img className="mb-3 w-32 self-center" src={profileImg} />
         <h1 className="text-center text-2xl">Shambhavi Mishra</h1>

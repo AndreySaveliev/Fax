@@ -15,8 +15,12 @@ function App() {
 
   return (
     <div className="flex h-screen w-screen flex-col bg-background">
-      <Header handleShowSideBar={handleShowSideBar} />
-      <SideBar showSide={showSide} handleShowSideBar={handleShowSideBar} />
+      <Header index handleShowSideBar={handleShowSideBar} />
+      <SideBar
+        index
+        showSide={showSide}
+        handleShowSideBar={handleShowSideBar}
+      />
       <Routes>
         <Route
           path="chats/:uuid"
@@ -28,8 +32,8 @@ function App() {
           }
         />
         <Route path="/profile" element={<UserProfile />} />
+        {/* <Input /> */}
       </Routes>
-      {/* <Input /> */}
     </div>
   );
 }
