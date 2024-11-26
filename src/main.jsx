@@ -4,7 +4,16 @@ import "./index.css";
 import App from "./App.jsx";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter } from "react-router";
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker
+      .register("./serviceWorker")
+      .then((res) => console.log("service worker registered"))
+      .catch((err) => console.log("service worker not registered", err));
+  });
+}
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
