@@ -6,14 +6,14 @@ import { store } from "./redux/store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router";
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker
-      .register("./serviceWorker")
-      .then((res) => console.log("service worker registered"))
-      .catch((err) => console.log("service worker not registered", err));
-  });
-}
+// if ("serviceWorker" in navigator) {
+//   window.addEventListener("load", function () {
+//     navigator.serviceWorker
+//       .register("./serviceWorker")
+//       .then((res) => console.log("service worker registered"))
+//       .catch((err) => console.log("service worker not registered", err));
+//   });
+// }
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
