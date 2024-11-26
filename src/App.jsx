@@ -4,6 +4,7 @@ import Input from "./components/Input";
 import MessageContainer from "./components/MessageContainer";
 import SideBar from "./components/SideBar";
 import { Route, Routes } from "react-router";
+import UserProfile from "./components/UserProfile";
 function App() {
   // const apiKey = process.env.MISTRAL_API_KEY || 'your_api_key';
   const [showSide, setShowSide] = useState(false);
@@ -18,7 +19,7 @@ function App() {
       <SideBar showSide={showSide} handleShowSideBar={handleShowSideBar} />
       <Routes>
         <Route
-          path="/:uuid"
+          path="chats/:uuid"
           element={
             <>
               <MessageContainer />
@@ -26,6 +27,7 @@ function App() {
             </>
           }
         />
+        <Route path="/profile" element={<UserProfile />} />
       </Routes>
       {/* <Input /> */}
     </div>
