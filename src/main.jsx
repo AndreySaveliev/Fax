@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router";
+import { BrowserRouter, Route, Routes } from "react-router";
 
 // if ("serviceWorker" in navigator) {
 //   window.addEventListener("load", function () {
@@ -19,7 +19,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <Routes>
+          <Route path="/*" element={<App />} />
+        </Routes>
       </BrowserRouter>
     </Provider>
   </StrictMode>,

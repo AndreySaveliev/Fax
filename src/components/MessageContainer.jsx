@@ -14,9 +14,10 @@ function MessageContainer() {
       scroll.current.scrollIntoView({ behavior: "auto" });
     }
   }, [chatData, chatData.messages]);
+
   return (
     <div className="mx-auto mb-6 flex h-full w-full flex-col items-end gap-4 overflow-scroll overflow-x-hidden px-5 lg:w-[60%] lg:px-0">
-      {chatData.messages &&
+      {chatData &&
         chatData.messages.map((message, index) => (
           <Message key={index} from={message.from} message={message.text} />
         ))}
