@@ -8,15 +8,19 @@ import {
   sendMessage,
 } from "../redux/messagesSlice";
 import { useParams } from "react-router";
+import { addName } from "../redux/chatSlice";
 function Input() {
   const [promt, setPropmt] = useState("");
   let params = useParams();
-  const { isPending, ableToReask, lastMessage } = useSelector(
+  const { isPending, ableToReask, lastMessage, messages } = useSelector(
     (state) => state.messages.chats[params.uuid],
   );
   const [isDis, setDis] = useState(false);
   const dispatch = useDispatch();
   const handleClickSend = () => {
+    if (messages.length == 0) {
+      dispatch(addName({ name: promt, id: params.uuid }));
+    }
     dispatch(saveUserMessage({ promt, id: params.uuid }));
     dispatch(sendMessage({ message: promt, id: params.uuid }));
     setPropmt("");

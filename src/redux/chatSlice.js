@@ -19,16 +19,25 @@ const chatSlice = createSlice({
   name: "chats",
   initialState,
   reducers: {
-    addChat: (state, payload) => {
-      state.chats += 1;
+    createChat: (state, action) => {
+      state.chats.push({
+        chatId: action.payload.id,
+        timeStamp: null,
+        name: null,
+      });
     },
-    deleteChat: (state, payload) => {
-      state.chats = state.chats.filter(
-        (chat) => chat.chatId !== payload.chatId,
-      );
+    addName: (state, action) => {
+      let newState = state;
+      newState.chats.forEach((chat) => {
+        if (chat.chatId == action.payload.id) {
+          chat.name = action.payload.name;
+          chat.timeStamp = Date.now();
+        }
+      });
+      state = newState;
     },
   },
 });
-export const { addChat } = chatSlice.actions;
+export const { createChat, addName } = chatSlice.actions;
 
 export default chatSlice.reducer;

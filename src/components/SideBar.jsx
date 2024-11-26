@@ -1,12 +1,23 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFormatDate } from "../hooks/useFormatDate";
 import { useNavigate } from "react-router";
+import { createChat } from "../redux/chatSlice";
+import { createChatData } from "../redux/messagesSlice";
 function SideBar({ showSide, handleShowSideBar }) {
   const { chats } = useSelector((state) => state.chats);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleSelectChat = (id) => {
-    navigate(`../${id}`, { replace: true });
+    navigate(`../chats/${id}`, { replace: true });
+    handleShowSideBar();
+  };
+
+  const handleCreateChat = () => {
+    let id = crypto.randomUUID().toString();
+    dispatch(createChat({ id }));
+    dispatch(createChatData({ id }));
+    navigate(`../chats/${id}`, { replace: true });
     handleShowSideBar();
   };
 
@@ -29,6 +40,12 @@ function SideBar({ showSide, handleShowSideBar }) {
               </p>
             </div>
           ))}
+        <button
+          className="mt-3 rounded-md border-2 border-text p-3"
+          onClick={handleCreateChat}
+        >
+          Create new chat
+        </button>
       </div>
       <button
         onClick={handleShowSideBar}

@@ -70,6 +70,15 @@ const messagesSlice = createSlice({
     increment: (state) => {
       state.messageCount += 1;
     },
+    createChatData: (state, action) => {
+      state.chats[action.payload.id] = {
+        messages: [],
+        lastMessage: "",
+        lastMessageTimeStamp: "",
+        isPending: false,
+        ableToReask: false,
+      };
+    },
     saveUserMessage: (state, action) => {
       let newState = state;
       newState.chats[action.payload.id].messages.push({
@@ -104,14 +113,12 @@ const messagesSlice = createSlice({
       state = newState;
     });
     builder.addCase(reAskLastQuestion.pending, (state, action) => {
-      console.log(action, "pending");
       let newState = state;
       newState.chats[action.meta.arg.id].isPending = true;
       newState.chats[action.meta.arg.id].ableToReask = false;
       state = newState;
     });
     builder.addCase(reAskLastQuestion.fulfilled, (state, action) => {
-      console.log(action, "full");
       let newState = state;
       newState.chats[action.meta.arg.id].messages.push({
         text: action.payload.response.choices[0].message.content,
@@ -124,6 +131,7 @@ const messagesSlice = createSlice({
     });
   },
 });
-export const { increment, saveUserMessage } = messagesSlice.actions;
+export const { increment, saveUserMessage, createChatData } =
+  messagesSlice.actions;
 
 export default messagesSlice.reducer;
