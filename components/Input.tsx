@@ -1,14 +1,19 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import sendIcon from "./../public/message-send.svg";
-import reload from "./../public/reload.svg";
 import Image from "next/image";
 
-function Input({ handleSendMessage }: { handleSendMessage: (str: string) => void }) {
+function Input({
+  handleSendMessage,
+  id,
+}: {
+  handleSendMessage: (text: string, id: number | null) => Promise<void>;
+  id: number | null;
+}) {
   const [promt, setPropmt] = useState("");
 
   const handleClickSend = () => {
-    handleSendMessage(promt);
+    handleSendMessage(promt, id);
     setPropmt("");
   };
 
