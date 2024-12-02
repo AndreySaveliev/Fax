@@ -6,16 +6,17 @@ import withSerwistInit from "@serwist/next";
 // A viable option is `git rev-parse HEAD`.
 const revision = crypto.randomUUID();
 
-const withSerwist = withSerwistInit({
-  cacheOnNavigation: true,
-  swSrc: "app/sw.ts",
-  swDest: "public/sw.js",
-  additionalPrecacheEntries: [{ url: "/~offline", revision }],
-});
+// const withSerwist = withSerwistInit({
+//   cacheOnNavigation: true,
+//   swSrc: "app/sw.ts",
+//   swDest: "public/sw.js",
+//   additionalPrecacheEntries: [{ url: "/~offline", revision }],
+// });
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
 };
 
-export default withSerwist(nextConfig);
+// export default withSerwist(nextConfig);
+export default nextConfig;
