@@ -5,7 +5,7 @@ import { chatsTable, messagesTable, usersTable } from "@/db/schema";
 import { verifySession } from "@/lib/dal";
 import { createSession } from "@/lib/session";
 import { Mistral } from "@mistralai/mistralai";
-import { desc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -19,7 +19,7 @@ export const handleSendMessage = async (text: string, id: number | null) => {
       createdAt: new Date(),
     };
     await db.insert(messagesTable).values(newMessage);
-    revalidatePath(`/chats${id}`);
+    revalidatePath(`/chats/[id]`, "page");
     const answer = await handleAskAi(text);
     const botResponse = {
       chatId: id,
@@ -28,7 +28,7 @@ export const handleSendMessage = async (text: string, id: number | null) => {
       createdAt: new Date(),
     };
     await db.insert(messagesTable).values(botResponse);
-    revalidatePath(`/chats${id}`);
+    revalidatePath(`/chats/[id]`, "page");
   } else {
     const newChat = {
       name: text,
@@ -112,6 +112,14 @@ export const fetchUserChats = async () => {
     orderBy: desc(chatsTable.lastMessageTimeStamp),
   });
   return chats;
+};
+
+export const fetchChatMessagesData = async (id: number) => {
+  const messages = await db.query.messagesTable.findMany({
+    where: eq(messagesTable.chatId, id),
+    orderBy: asc(messagesTable.createdAt),
+  });
+  return messages;
 };
 
 export const handleLogOut = async () => {
