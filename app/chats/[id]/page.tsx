@@ -1,4 +1,3 @@
-import { handleSendMessage } from "@/actions/actions";
 import Input from "@/components/Input";
 import { db } from "@/db";
 import { messagesTable } from "@/db/schema";
@@ -23,7 +22,7 @@ export default async function ChatPage({ params }: { params: Promise<{ id: numbe
         <Image src={menuIcon} alt="menu" />
       </Link>
       <MessagesContainer messages={messages} />
-      <Input handleSendMessage={handleSendMessage} id={id} />
+      <Input  id={id} />
     </>
   );
 }

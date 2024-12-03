@@ -2,14 +2,9 @@
 import React, { useState } from "react";
 import sendIcon from "./../public/message-send.svg";
 import Image from "next/image";
+import { handleSendMessage } from "@/actions/actions";
 
-function Input({
-  handleSendMessage,
-  id,
-}: {
-  handleSendMessage: (text: string, id: number | null) => Promise<void>;
-  id: number | null;
-}) {
+function Input({ id }: { id: number | null }) {
   const [promt, setPropmt] = useState("");
 
   const handleClickSend = () => {
