@@ -13,7 +13,8 @@ export default async function Home() {
       </button>
       <div className="mx-auto flex flex-col justify-end flex-1 gap-5 w-full">
         <h2 className="text-center">Or create new chat</h2>
-        <Input handleSendMessage={handleSendMessage} id={null} />
+        <Input id={null} />
+        
       </div>
     </div>
   );

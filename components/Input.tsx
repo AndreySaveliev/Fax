@@ -24,6 +24,7 @@ function Input({ id }: { id: number | null }) {
         <button
           className="absolute right-[16px] top-[50%] -translate-y-[50%] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
           onClick={handleClickSend}
+          type="submit"
         >
           <Image src={sendIcon} alt="send text" />
         </button>
