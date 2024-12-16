@@ -1,4 +1,4 @@
-import { fetchUserChats, handleLogOut, handleSendMessage } from "@/actions/actions";
+import { fetchUserChats, handleLogOut } from "@/actions/actions";
 import Input from "@/components/Input";
 import SidebarEl from "@/components/SidebarEl";
 
@@ -14,7 +14,6 @@ export default async function Home() {
       <div className="mx-auto flex flex-col justify-end flex-1 gap-5 w-full">
         <h2 className="text-center">Or create new chat</h2>
         <Input id={null} />
-        
       </div>
     </div>
   );
